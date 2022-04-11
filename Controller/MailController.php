@@ -90,11 +90,11 @@ class MailController extends OaBaseController
                 $subject,
                 $content,
                 $recipients,
-                $files = [],
+                $files,
                 $user,
-                $parentId = 0,
-                $parentSchema = '',
-                $type = '',
+                $parentId,
+                $parentSchema,
+                $type,
             );
 
             $event = new SocketSendPoolEvent();
