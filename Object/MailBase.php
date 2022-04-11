@@ -2,9 +2,10 @@
 namespace Newageerp\SfMail\Object;
 
 use Doctrine\ORM\Mapping as ORM;
+use Newageerp\SfBaseEntity\Object\BaseUser;
 use OpenApi\Annotations as OA;
 
-class MailBase
+class MailBase extends BaseUser
 {
     /**
      * @ORM\Column(type="integer")
