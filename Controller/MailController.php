@@ -3,6 +3,7 @@ namespace Newageerp\SfMail\Controller;
 
 use Newageerp\SfBaseEntity\Controller\OaBaseController;
 use Newageerp\SfMail\Event\SfMailBeforeLoadEvent;
+use Newageerp\SfSocket\Event\SocketSendPoolEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -55,5 +56,45 @@ class MailController extends OaBaseController
         } catch (\Exception $e) {
         }
         return $this->json($output);
+    }
+
+    /**
+     * @Route(path="/send")
+     * @OA\Post (operationId="NAEmailsSend")
+     */
+    public function sendEmail(Request $request)
+    {
+        try {
+            $request = $this->transformJsonBody($request);
+
+            if (!($user = $this->findUser($request))) {
+                throw new \Exception('Invalid user');
+            }
+
+            $subject = $request->get('subject');
+            $recipient = explode(',', str_replace([' ', ';'], ['', ','], $request->get('recipients')));
+            $content = $request->get('content');
+            $files = $request->get('files');
+
+            $extraData = $request->get('extraData');
+
+            $type = isset($extraData['type']) ? $extraData['type'] : '';
+            $parentId = isset($extraData['id']) ? $extraData['id'] : 0;
+            $parentSchema = isset($extraData['schema']) ? $extraData['schema'] : 0;
+
+            $event = new SocketSendPoolEvent();
+            $this->eventDispatcher->dispatch($event, SocketSendPoolEvent::NAME);
+
+            return $this->json(['success' => 1]);
+        } catch (\Exception $e) {
+            $response = $this->json([
+                'description' => $e->getMessage(),
+                'f' => $e->getFile(),
+                'l' => $e->getLine()
+
+            ]);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        }
     }
 }

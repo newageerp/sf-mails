@@ -1,5 +1,5 @@
 <?php
-namespace Newageerp\SfMail;
+namespace Newageerp\SfMail\Object;
 
 use Doctrine\ORM\Mapping as ORM;
 use OpenApi\Annotations as OA;

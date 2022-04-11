@@ -10,7 +10,8 @@
     "doctrine/orm": "^2",
     "nelmio/api-doc-bundle": "^4",
     "symfony/event-dispatcher": "^5.0",
-    "newageerp/sf-base-entity": "^0.0"
+    "newageerp/sf-base-entity": "^0.0",
+    "symfony/mime": "5.4.*"
   },
   "license": "MIT",
   "authors": [
