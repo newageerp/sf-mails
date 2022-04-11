@@ -1,8 +1,10 @@
 <?php
+
 namespace Newageerp\SfMail\Controller;
 
 use Newageerp\SfBaseEntity\Controller\OaBaseController;
 use Newageerp\SfMail\Event\SfMailBeforeLoadEvent;
+use Newageerp\SfMail\Service\IMailSendService;
 use Newageerp\SfSocket\Event\SocketSendPoolEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +17,7 @@ use OpenApi\Annotations as OA;
 class MailController extends OaBaseController
 {
     /**
-     * @Route(path="/getData")
+     * @Route(path="/getData", methods={"POST"})
      * @OA\Post (operationId="NAEmailsGetData")
      */
     public function getData(Request $request): Response
@@ -59,10 +61,10 @@ class MailController extends OaBaseController
     }
 
     /**
-     * @Route(path="/send")
+     * @Route(path="/send", methods={"POST"})
      * @OA\Post (operationId="NAEmailsSend")
      */
-    public function sendEmail(Request $request)
+    public function sendEmail(Request $request, IMailSendService $mailSendService)
     {
         try {
             $request = $this->transformJsonBody($request);
@@ -72,15 +74,28 @@ class MailController extends OaBaseController
             }
 
             $subject = $request->get('subject');
-            $recipient = explode(',', str_replace([' ', ';'], ['', ','], $request->get('recipients')));
+            $recipients = explode(',', str_replace([' ', ';'], ['', ','], $request->get('recipients')));
             $content = $request->get('content');
             $files = $request->get('files');
 
             $extraData = $request->get('extraData');
 
-            $type = isset($extraData['type']) ? $extraData['type'] : '';
-            $parentId = isset($extraData['id']) ? $extraData['id'] : 0;
-            $parentSchema = isset($extraData['schema']) ? $extraData['schema'] : 0;
+            $type = $extraData['type'] ?? '';
+            $parentId = $extraData['id'] ?? 0;
+            $parentSchema = $extraData['schema'] ?? 0;
+
+            $mailSendService->prepareMail(
+                '',
+                $user->getEmail(),
+                $subject,
+                $content,
+                $recipients,
+                $files = [],
+                $user,
+                $parentId = 0,
+                $parentSchema = '',
+                $type = '',
+            );
 
             $event = new SocketSendPoolEvent();
             $this->eventDispatcher->dispatch($event, SocketSendPoolEvent::NAME);
