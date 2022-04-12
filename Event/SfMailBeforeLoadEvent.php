@@ -20,12 +20,15 @@ class SfMailBeforeLoadEvent extends Event
 
     protected array $data;
 
+    protected string $schema;
+
     public function __construct(
         Request $request,
         IUser   $user,
                 $entity,
         array   $current,
         array   $data,
+        string  $schema,
     )
     {
         $this->request = $request;
@@ -33,6 +36,23 @@ class SfMailBeforeLoadEvent extends Event
         $this->entity = $entity;
         $this->current = $current;
         $this->data = $data;
+        $this->schema = $schema;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema(): string
+    {
+        return $this->schema;
+    }
+
+    /**
+     * @param string $schema
+     */
+    public function setSchema(string $schema): void
+    {
+        $this->schema = $schema;
     }
 
     /**

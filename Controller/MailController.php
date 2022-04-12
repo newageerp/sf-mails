@@ -45,7 +45,8 @@ class MailController extends OaBaseController
                     $user,
                     $entity,
                     $current,
-                    $output
+                    $output,
+                    $schema,
                 );
                 $this->eventDispatcher->dispatch($event, SfMailBeforeLoadEvent::NAME);
 
