@@ -4,6 +4,7 @@ namespace Newageerp\SfMail\Controller;
 
 use Newageerp\SfBaseEntity\Controller\OaBaseController;
 use Newageerp\SfMail\Event\SfMailBeforeLoadEvent;
+use Newageerp\SfMail\Event\SfMailBeforeSendEvent;
 use Newageerp\SfMail\Service\IMailSendService;
 use Newageerp\SfSocket\Event\SocketSendPoolEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -85,9 +86,15 @@ class MailController extends OaBaseController
             $parentId = $extraData['id'] ?? 0;
             $parentSchema = $extraData['schema'] ?? 0;
 
-            $mailSendService->prepareMail(
+            $event = new SfMailBeforeSendEvent(
                 '',
-                $user->getEmail(),
+                $user->getEmail()
+            );
+            $this->eventDispatcher->dispatch($event, SfMailBeforeSendEvent::NAME);
+
+            $mailSendService->prepareMail(
+                $event->getFromName(),
+                $event->getFromEmail() ,
                 $subject,
                 $content,
                 $recipients,
