@@ -88,7 +88,8 @@ class MailController extends OaBaseController
 
             $event = new SfMailBeforeSendEvent(
                 '',
-                $user->getEmail()
+                $user->getEmail(),
+                $user
             );
             $this->eventDispatcher->dispatch($event, SfMailBeforeSendEvent::NAME);
 
