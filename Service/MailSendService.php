@@ -58,7 +58,7 @@ abstract class MailSendService implements IMailSendService
             if (!isset($file['name'])) {
                 continue;
             }
-            $tmpPath = sys_get_temp_dir() . '/' . $file['name'];
+            $tmpPath = sys_get_temp_dir() . '/' . str_replace('/', '', $file['name']);
             $data = file_get_contents($file['link']);
             file_put_contents($tmpPath, $data);
 
