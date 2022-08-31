@@ -6,7 +6,6 @@ use Newageerp\SfBaseEntity\Controller\OaBaseController;
 use Newageerp\SfMail\Event\SfMailBeforeLoadEvent;
 use Newageerp\SfMail\Event\SfMailBeforeSendEvent;
 use Newageerp\SfMail\Service\IMailSendService;
-use Newageerp\SfSocket\Event\SocketSendPoolEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
