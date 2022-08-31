@@ -106,8 +106,7 @@ class MailController extends OaBaseController
                 $type,
             );
 
-            $event = new SocketSendPoolEvent();
-            $this->eventDispatcher->dispatch($event, SocketSendPoolEvent::NAME);
+            $this->sendSocketPool();
 
             return $this->json(['success' => 1]);
         } catch (\Exception $e) {
